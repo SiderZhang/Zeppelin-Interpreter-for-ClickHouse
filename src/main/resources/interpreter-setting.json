@@ -1,0 +1,49 @@
+[
+  {
+    "group": "clickhouse",
+    "name": "http",
+    "className": "site.sider.zic.ClickHouseJDBCInterpreter",
+    "properties": {
+      "default.url": {
+        "envName": null,
+        "propertyName": "default.url",
+        "defaultValue": "http://localhost:8123/",
+        "description": "The URL for http connection.",
+        "type": "string"
+      },
+      "default.user": {
+        "envName": null,
+        "propertyName": "default.user",
+        "defaultValue": "",
+        "description": "The user name",
+        "type": "string"
+      },
+      "default.password": {
+        "envName": null,
+        "propertyName": "default.password",
+        "defaultValue": "",
+        "description": "The user password",
+        "type": "password"
+      },
+      "default.precode": {
+        "envName": null,
+        "propertyName": "default.session.precode",
+        "defaultValue": "set send_progress_in_http_headers=1",
+        "description": "SQL which executes while creating session",
+        "type": "textarea"
+      },
+      "default.statementPrecode": {
+        "envName": null,
+        "propertyName": "default.statementPrecode",
+        "defaultValue": "",
+        "description": "Runs before each run of the paragraph, in the same connection",
+        "type": "textarea"
+      }
+    },
+    "editor": {
+      "language": "sql",
+      "editOnDblClick": false,
+      "completionSupport": true
+    }
+  }
+]

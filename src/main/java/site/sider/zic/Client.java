@@ -52,11 +52,14 @@ public class Client {
         server = builder.build();
     }
 
-    public void executeSQL(String sql) {
+    public String executeSQL(String sql, String queryId) {
+        StringBuilder stringBuilder = new StringBuilder();
+
         // connect to localhost, use default port of the preferred protocol
         try (ClickHouseClient client = ClickHouseClient.newInstance(ClickHouseProtocol.HTTP)) {
             ClickHouseRequest<?> req = client.connect(server).format(ClickHouseFormat.RowBinaryWithNamesAndTypes);
             req.session(UUID.randomUUID().toString(), false);
+            req.getQueryId();
 
             try (ClickHouseResponse resp = req.query("set send_progress_in_http_headers=1").execute().get()) {
                 resp.getSummary();
@@ -64,11 +67,30 @@ public class Client {
                 logger.error("get exception while setting" , e);
             }
 
-            try (ClickHouseResponse resp = req.query(sql).execute().get()) {
+            try (ClickHouseResponse resp = req.query(sql, queryId).execute().get()) {
+                Iterator<ClickHouseColumn> columnIterator = resp.getColumns().iterator();
+                while (columnIterator.hasNext()) {
+                    ClickHouseColumn column = columnIterator.next();
+                    stringBuilder.append(column.getColumnName());
+                    if (columnIterator.hasNext()) {
+                        stringBuilder.append("\t");
+                    } else {
+                        stringBuilder.append("\n");
+                    }
+                }
+
                 // or resp.stream() if you prefer stream API
                 for (ClickHouseRecord record : resp.records()) {
-                    String result = Streams.stream(record.iterator()).map(ClickHouseValue::asString).reduce((s1, s2) -> s1 + "," + s2).orElse("");
-                    logger.info(result);
+                    Iterator<ClickHouseValue> valueIter = record.iterator();
+                    while (valueIter.hasNext()) {
+                        ClickHouseValue value = valueIter.next();
+                        stringBuilder.append(value.asString());
+                        if (valueIter.hasNext()) {
+                            stringBuilder.append("\t");
+                        } else {
+                            stringBuilder.append("\n");
+                        }
+                    }
                 }
 
                 ClickHouseResponseSummary summary = resp.getSummary();
@@ -78,5 +100,7 @@ public class Client {
                 logger.error("got exception while querying: " + sql, e);
             }
         }
+
+        return stringBuilder.toString();
     }
 }

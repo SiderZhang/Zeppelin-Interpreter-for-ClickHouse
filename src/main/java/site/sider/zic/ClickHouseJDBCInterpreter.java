@@ -3,12 +3,10 @@ package site.sider.zic;
 import com.clickhouse.client.ClickHouseFormat;
 import com.clickhouse.client.ClickHouseNode;
 import com.clickhouse.client.ClickHouseProtocol;
-import org.apache.zeppelin.interpreter.Interpreter;
-import org.apache.zeppelin.interpreter.InterpreterContext;
-import org.apache.zeppelin.interpreter.InterpreterException;
-import org.apache.zeppelin.interpreter.InterpreterResult;
+import org.apache.zeppelin.interpreter.*;
 
 import java.util.Properties;
+import java.util.UUID;
 
 public class ClickHouseJDBCInterpreter extends Interpreter {
     private Client client;
@@ -30,8 +28,9 @@ public class ClickHouseJDBCInterpreter extends Interpreter {
 
     @Override
     public InterpreterResult interpret(String s, InterpreterContext interpreterContext) throws InterpreterException {
-        client.executeSQL(s);
-        return new InterpreterResult(InterpreterResult.Code.SUCCESS);
+        String queryId = UUID.randomUUID().toString();
+        String result = client.executeSQL(s, queryId);
+        return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TABLE, result);
     }
 
     @Override
