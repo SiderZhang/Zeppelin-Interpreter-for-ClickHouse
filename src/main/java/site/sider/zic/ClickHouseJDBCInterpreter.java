@@ -40,7 +40,7 @@ public class ClickHouseJDBCInterpreter extends Interpreter {
 
     @Override
     public FormType getFormType() throws InterpreterException {
-        return null;
+        return FormType.SIMPLE;
     }
 
     @Override
