@@ -1,17 +1,17 @@
 package site.sider.zic;
 
-import com.clickhouse.client.ClickHouseFormat;
-import com.clickhouse.client.ClickHouseNode;
-import com.clickhouse.client.ClickHouseProtocol;
-import org.apache.zeppelin.interpreter.*;
+import org.apache.zeppelin.interpreter.Interpreter;
+import org.apache.zeppelin.interpreter.InterpreterContext;
+import org.apache.zeppelin.interpreter.InterpreterException;
+import org.apache.zeppelin.interpreter.InterpreterResult;
 
 import java.util.Properties;
 import java.util.UUID;
 
-public class ClickHouseJDBCInterpreter extends Interpreter {
+public class ClickHouseHttpInterpreter extends Interpreter {
     private Client client;
 
-    public ClickHouseJDBCInterpreter(Properties properties) {
+    public ClickHouseHttpInterpreter(Properties properties) {
         super(properties);
         client = new Client(properties);
     }
@@ -29,8 +29,12 @@ public class ClickHouseJDBCInterpreter extends Interpreter {
     @Override
     public InterpreterResult interpret(String s, InterpreterContext interpreterContext) throws InterpreterException {
         String queryId = UUID.randomUUID().toString();
-        String result = client.executeSQL(s, queryId);
-        return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TABLE, result);
+        try {
+            String result = client.executeSQL(s, queryId);
+            return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TABLE, result);
+        } catch (Exception e) {
+            return new InterpreterResult(InterpreterResult.Code.ERROR, e.getMessage());
+        }
     }
 
     @Override

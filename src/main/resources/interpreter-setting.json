@@ -2,12 +2,19 @@
   {
     "group": "clickhouse",
     "name": "http",
-    "className": "site.sider.zic.ClickHouseJDBCInterpreter",
+    "className": "site.sider.zic.ClickHouseHTTPInterpreter",
     "properties": {
       "default.url": {
         "envName": null,
-        "propertyName": "default.url",
-        "defaultValue": "http://localhost:8123/",
+        "propertyName": "default.host",
+        "defaultValue": "localhost",
+        "description": "The URL for http connection.",
+        "type": "string"
+      },
+      "default.url": {
+        "envName": null,
+        "propertyName": "default.port",
+        "defaultValue": "8123",
         "description": "The URL for http connection.",
         "type": "string"
       },
@@ -24,6 +31,13 @@
         "defaultValue": "",
         "description": "The user password",
         "type": "password"
+      },
+      "default.database": {
+        "envName": null,
+        "propertyName": "default.database",
+        "defaultValue": "",
+        "description": "The user name",
+        "type": "string"
       },
       "default.precode": {
         "envName": null,
