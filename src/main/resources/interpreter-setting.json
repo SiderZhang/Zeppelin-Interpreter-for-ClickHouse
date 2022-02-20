@@ -2,20 +2,20 @@
   {
     "group": "clickhouse",
     "name": "http",
-    "className": "site.sider.zic.ClickHouseHTTPInterpreter",
+    "className": "site.sider.zic.ClickHouseHttpInterpreter",
     "properties": {
-      "default.url": {
+      "default.host": {
         "envName": null,
         "propertyName": "default.host",
         "defaultValue": "localhost",
-        "description": "The URL for http connection.",
+        "description": "The host of the ClickHouse.",
         "type": "string"
       },
-      "default.url": {
+      "default.port": {
         "envName": null,
         "propertyName": "default.port",
         "defaultValue": "8123",
-        "description": "The URL for http connection.",
+        "description": "The port of the ClickHouse.",
         "type": "string"
       },
       "default.user": {
@@ -36,22 +36,8 @@
         "envName": null,
         "propertyName": "default.database",
         "defaultValue": "",
-        "description": "The user name",
+        "description": "The database to query",
         "type": "string"
-      },
-      "default.precode": {
-        "envName": null,
-        "propertyName": "default.session.precode",
-        "defaultValue": "set send_progress_in_http_headers=1",
-        "description": "SQL which executes while creating session",
-        "type": "textarea"
-      },
-      "default.statementPrecode": {
-        "envName": null,
-        "propertyName": "default.statementPrecode",
-        "defaultValue": "",
-        "description": "Runs before each run of the paragraph, in the same connection",
-        "type": "textarea"
       }
     },
     "editor": {
