@@ -3,6 +3,7 @@
 ## Brief
 1. Provide http based interpreter for ClickHouse
 2. Compared with the JDBC interpreter of Zeppelin, this interpreter could query for a long time without timeout failure.
+3. Provide progress information based on rows read information from ClickHouse.
 
 ## How do deploy
 1. Download the jar and put it in the path ${ZEPPELIN_HOME}/interpreter/clickhouse/
