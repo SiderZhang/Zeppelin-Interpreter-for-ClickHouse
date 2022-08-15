@@ -5,7 +5,7 @@
 2. Compared with the JDBC interpreter of Zeppelin, this interpreter could query for a long time without timeout failure.
 3. Provide progress information based on rows read information from ClickHouse.
 
-## How do deploy
+## How to deploy
 1. Download the jar and put it in the path ${ZEPPELIN_HOME}/interpreter/clickhouse/
 2. Restart Zeppelin.
 3. Check the 'clickhouse' Interpreter in 'Interpreters' page of Zeppelin to ensure the interpreter is loaded successfully. 
