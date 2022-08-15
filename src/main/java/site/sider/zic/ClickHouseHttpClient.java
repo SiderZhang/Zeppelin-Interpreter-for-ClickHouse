@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ClickHouseHttpClient extends ByteToMessageDecoder {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClickHouseHttpInterpreter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClickHouseHttpClient.class);
 
     private Boolean headOver = false;
 
@@ -24,17 +26,30 @@ public class ClickHouseHttpClient extends ByteToMessageDecoder {
     private Consumer<QueryResponse> consumer = null;
     private Connection connection = null;
     private String sql = null;
+    private Map<String, String> querySetting;
 
-    public ClickHouseHttpClient(Consumer<QueryResponse> consumer, Connection connection, String sql) {
+    public ClickHouseHttpClient(Consumer<QueryResponse> consumer, Connection connection, String sql, Map<String, String> querySetting) {
         this.consumer = consumer;
         this.sql = sql;
         this.connection = connection;
+        this.querySetting = querySetting;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        URI url = new URI("/?send_progress_in_http_headers=1&query=" + URLEncoder.encode(sql, "UTF-8"));
+
+        String param = querySetting.entrySet().stream().map(entry -> {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            return key + "=" + value;
+        }).collect(Collectors.joining("&"));
+        if (StringUtils.isNoneBlank(param)) {
+            param += "&";
+        }
+
+        URI url = new URI("/?" + param + "query=" + URLEncoder.encode(sql, "UTF-8"));
+
         //配置HttpRequest的请求数据和一些配置信息
         FullHttpRequest request = new DefaultFullHttpRequest(
                 HttpVersion.HTTP_1_0, HttpMethod.GET, url.toASCIIString());

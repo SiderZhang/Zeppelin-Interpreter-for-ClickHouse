@@ -38,6 +38,34 @@
         "defaultValue": "",
         "description": "The database to query",
         "type": "string"
+      },
+      "default.settings.query.send_progress_in_http_headers": {
+        "envName": null,
+        "propertyName": "default.settings.query.send_progress_in_http_headers",
+        "defaultValue": "1",
+        "description": "Whether show query progress",
+        "type": "string"
+      },
+      "default.settings.query.max_memory_usage": {
+        "envName": null,
+        "propertyName": "default.settings.query.max_memory_usage",
+        "defaultValue": "10737418240",
+        "description": "The size of memory could be used in a single query. Some calculation, e.g. count distinct on large number of data, needs large memory. Unit is byte. Default is 10GB",
+        "type": "string"
+      },
+      "default.settings.query.max_result_rows": {
+        "envName": null,
+        "propertyName": "default.settings.query.max_result_rows",
+        "defaultValue": "1000",
+        "description": "The max number of the rows of the result. It will prevent Zeppelin and ClickHouse server being blocked by heavy queries.",
+        "type": "string"
+      },
+      "default.settings.query.max_result_bytes": {
+        "envName": null,
+        "propertyName": "default.settings.query.max_result_bytes",
+        "defaultValue": "10485760",
+        "description": "The max number of the rows of the result. It will prevent Zeppelin and ClickHouse server being blocked by heavy queries.",
+        "type": "string"
       }
     },
     "editor": {

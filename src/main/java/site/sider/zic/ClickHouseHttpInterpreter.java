@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ClickHouseHttpInterpreter extends Interpreter {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClickHouseHttpInterpreter.class);
@@ -26,12 +27,14 @@ public class ClickHouseHttpInterpreter extends Interpreter {
     private static final String USER_KEY = "user";
     private static final String PASSWORD_KEY = "password";
     private static final String DATABASE_KEY = "database";
+    private static final String QUERY_SETTING = "settings.query";
 
     private static final String DEFAULT_HOST_KEY = DEFAULT_KEY + DOT + HOST_KEY;
     private static final String DEFAULT_PORT_KEY = DEFAULT_KEY + DOT + PORT_KEY;
     private static final String DEFAULT_USER_KEY = DEFAULT_KEY + DOT + USER_KEY;
     private static final String DEFAULT_PASSWORD_KEY = DEFAULT_KEY + DOT + PASSWORD_KEY;
     private static final String DEFAULT_DATABASE_KEY = DEFAULT_KEY + DOT + DATABASE_KEY;
+    private static final String QUERY_SETTING_PREFIX = DEFAULT_KEY + DOT + QUERY_SETTING;
 
     private Connection connection;
 
@@ -76,8 +79,13 @@ public class ClickHouseHttpInterpreter extends Interpreter {
             return new InterpreterResult(InterpreterResult.Code.SUCCESS, InterpreterResult.Type.TABLE, queryRequest.getResult());
         }
 
+        Map<String, String> querySettingMap = properties.stringPropertyNames()
+                .stream()
+                .filter(name -> name.startsWith(QUERY_SETTING_PREFIX))
+                .collect(Collectors.toMap(key -> key.substring(QUERY_SETTING_PREFIX.length() + 1), key -> properties.getProperty(key, "")));
+
         try {
-            queryRequest = new QueryRequest(connection);
+            queryRequest = new QueryRequest(connection, querySettingMap);
             queryRequestMap.put(paraId, queryRequest);
             queryRequest.executeSQL(s);
             int retCode = queryRequest.getResponse().getRetCode();
