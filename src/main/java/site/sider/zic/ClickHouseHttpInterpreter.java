@@ -82,7 +82,7 @@ public class ClickHouseHttpInterpreter extends Interpreter {
         Map<String, String> querySettingMap = properties.stringPropertyNames()
                 .stream()
                 .filter(name -> name.startsWith(QUERY_SETTING_PREFIX))
-                .collect(Collectors.toMap(key -> key, key -> properties.getProperty(key, "")));
+                .collect(Collectors.toMap(key -> key.substring(QUERY_SETTING_PREFIX.length() + 1), key -> properties.getProperty(key, "")));
 
         try {
             queryRequest = new QueryRequest(connection, querySettingMap);
